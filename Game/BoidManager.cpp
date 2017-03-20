@@ -16,9 +16,9 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 	m_motherData = _motherData;
 
 
-	int numPery = _numPrey;
-	int numPredators = _numPredators;
-	int numMothers = _numMothers;
+	 numPrey = _numPrey;
+	 numPredators = _numPredators;
+	 numMothers = _numMothers;
 
 	m_boids.reserve(_numPrey + _numPredators + _numMothers);
 
@@ -59,8 +59,8 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 	m_preyData = _preyData;
 	m_predatorData = _predatorData;
 
-	int numPery = _numPrey;
-	int numPredators = _numPredators;
+	numPrey = _numPrey;
+	numPredators = _numPredators;
 
 	m_boids.reserve(_numPrey + _numPredators);
 
@@ -94,9 +94,8 @@ BoidManager::BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3
 
 	m_pd3dDevice = _pd3dDevice;
 	m_preyData = _preyData;
-	m_preyData = nullptr;
 
-
+	numPrey = _numPrey;
 
 
 	for (int i = 0; i < _numPrey; i++)

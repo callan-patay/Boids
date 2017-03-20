@@ -154,14 +154,15 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	//TwAddVarRW(boidsBar, "No. Prey", TW_TYPE_INT32, numPrey , "min=1 max=2000 step=1");
 	//TwAddVarRW(boidsBar, "No. Preds", TW_TYPE_INT32, numPredators, "min=1 max=3 step=1");
-
+	if (m_boidManager->getNumPrey() > 0)
+	{
 		TwAddVarRW(boidsBar, "Prey Neighbour Dist", TW_TYPE_FLOAT, &m_preyData->neighbourDistance, "Group='Prey' min=1 max=100 step=0.5");	
 		TwAddVarRW(boidsBar, "Prey Seperation", TW_TYPE_FLOAT, &m_preyData->seperation, "Group='Prey' min=1 max=100 step=0.5"); 
 		TwAddVarRW(boidsBar, "Prey Max Speed", TW_TYPE_FLOAT, &m_preyData->maxSpeed, "Group='Prey' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Prey Max Force", TW_TYPE_FLOAT, &m_preyData->maxForce, "Group='Prey' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Prey Repulsion", TW_TYPE_FLOAT, &m_preyData->repulsionForce, "Group='Prey' min=0.1 max=100 step=0.1");
 		TwAddVarRW(boidsBar, "Prey Attraction", TW_TYPE_FLOAT, &m_preyData->attractionForce, "Group='Prey' min=0.0 max= 1.0 step=0.01");
-
+	}
 	if (m_boidManager->getNumMothers() > 0)
 	{
 		TwAddVarRW(boidsBar, "Mother Neighbour Dist", TW_TYPE_FLOAT, &m_motherData->neighbourDistance, "Group='Mother' min=1 max=100 step=0.5");
@@ -169,9 +170,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		TwAddVarRW(boidsBar, "Mother Max Speed", TW_TYPE_FLOAT, &m_motherData->maxSpeed, "Group='Mother' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Mother Max Force", TW_TYPE_FLOAT, &m_motherData->maxForce, "Group='Mother' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Mother Repulsion", TW_TYPE_FLOAT, &m_motherData->repulsionForce, "Group='Mother' min=0.1 max=100 step=0.1");
-
 	}
-
 	if (m_boidManager->getNumPreds() > 0)
 	{
 		TwAddVarRW(boidsBar, "Pred Neighbour Dist", TW_TYPE_FLOAT, &m_predatorData->neighbourDistance, "Group='Predator' min=1 max=100 step=0.5");
@@ -179,31 +178,6 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		TwAddVarRW(boidsBar, "Pred Max Speed", TW_TYPE_FLOAT, &m_predatorData->maxSpeed, "Group='Predator' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Pred Max Force", TW_TYPE_FLOAT, &m_predatorData->maxForce, "Group='Predator' min=0.1 max=10 step=0.1");
 	}
-	//TwAddVarRW(boidsBar, "Prey Neighbour Dist", TW_TYPE_FLOAT, &m_preyData->neighbourDistance, "Group='Prey' min=1 max=100 step=0.5");
-	//TwAddVarRW(boidsBar, "Prey Seperation", TW_TYPE_FLOAT, &m_preyData->seperation, "Group='Prey' min=1 max=100 step=0.5");
-	//TwAddVarRW(boidsBar, "Prey Max Speed", TW_TYPE_FLOAT, &m_preyData->maxSpeed, "Group='Prey' min=0.1 max=10 step=0.1");
-	//TwAddVarRW(boidsBar, "Prey Max Force", TW_TYPE_FLOAT, &m_preyData->maxForce, "Group='Prey' min=0.1 max=10 step=0.1");
-	//TwAddVarRW(boidsBar, "Prey Repulsion", TW_TYPE_FLOAT, &m_preyData->repulsionForce, "Group='Prey' min=0.1 max=100 step=0.1");
-	//TwAddVarRW(boidsBar, "Prey Attraction", TW_TYPE_FLOAT, &m_preyData->attractionForce, "Group='Prey' min=0.0 max= 1.0 step=0.01");
-
-	//TwAddVarRW(boidsBar, "Mother Neighbour Dist", TW_TYPE_FLOAT, &m_motherData->neighbourDistance, "Group='Mother' min=1 max=100 step=0.5");
-	//TwAddVarRW(boidsBar, "Mother Seperation", TW_TYPE_FLOAT, &m_motherData->seperation, "Group='Mother' min=1 max=100 step=0.5");
-	//TwAddVarRW(boidsBar, "Mother Max Speed", TW_TYPE_FLOAT, &m_motherData->maxSpeed, "Group='Mother' min=0.1 max=10 step=0.1");
-	//TwAddVarRW(boidsBar, "Mother Max Force", TW_TYPE_FLOAT, &m_motherData->maxForce, "Group='Mother' min=0.1 max=10 step=0.1");
-	//TwAddVarRW(boidsBar, "Mother Repulsion", TW_TYPE_FLOAT, &m_motherData->repulsionForce, "Group='Mother' min=0.1 max=100 step=0.1");
-
-	//TwAddVarRW(boidsBar, "Pred Neighbour Dist", TW_TYPE_FLOAT, &m_predatorData->neighbourDistance, "Group='Predator' min=1 max=100 step=0.5");
-	//TwAddVarRW(boidsBar, "Pred Seperation", TW_TYPE_FLOAT, &m_predatorData->seperation, "Group='Predator' min=1 max=100 step=0.5");
-	//TwAddVarRW(boidsBar, "Pred Max Speed", TW_TYPE_FLOAT, &m_predatorData->maxSpeed, "Group='Predator' min=0.1 max=10 step=0.1");
-	//TwAddVarRW(boidsBar, "Pred Max Force", TW_TYPE_FLOAT, &m_predatorData->maxForce, "Group='Predator' min=0.1 max=10 step=0.1");
-
-
-
-
-
-	//TwTerminate();
-
-
 
 	//create DrawData struct and populate its pointers
 	m_DD = new DrawData;
