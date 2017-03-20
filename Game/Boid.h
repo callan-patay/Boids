@@ -23,6 +23,7 @@ public:
 	Vector3 Alignment();
 	Vector3 Cohesion();
 	Vector3 Repel();
+	Vector3 Attract();
 	Vector3 Seek(Vector3 _target);
 	void Box();
 	void applyForce(Vector3 _force);
@@ -34,7 +35,7 @@ public:
 	float getMaxSpeed() { return m_data->maxSpeed; };
 	float getMaxForce() { return m_data->maxForce; };
 	float getSeperation() { return m_data->seperation; };
-	bool getIsPrey() { return m_data->isPrey; }
+	int getType() { return m_data->type; }
 
 
 private:

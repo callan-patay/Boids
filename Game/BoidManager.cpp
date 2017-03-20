@@ -7,41 +7,77 @@
 #include <iostream>
 
 
+BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData * _preyData, BoidsData * _motherData, BoidsData * _predatorData, ID3D11Device * _pd3dDevice)
+{
+	m_pd3dDevice = _pd3dDevice;
+
+	m_preyData = _preyData;
+	m_predatorData = _predatorData;
+	m_motherData = _motherData;
+
+
+	int numPery = _numPrey;
+	int numPredators = _numPredators;
+	int numMothers = _numMothers;
+
+	m_boids.reserve(_numPrey + _numPredators + _numMothers);
+
+
+	for (int i = 0; i < _numPrey; i++)
+	{
+
+		Boid* boid = new Boid(_preyData, _pd3dDevice);
+		m_boids.push_back(boid);
+
+
+	}
+
+	for (int i = 0; i < _numPredators; i++)
+	{
+		Boid* boid = new Boid(_predatorData, _pd3dDevice);
+		m_boids.push_back(boid);
+	}
+
+	for (int i = 0; i < _numMothers; i++)
+	{
+		Boid* boid = new Boid(_motherData, _pd3dDevice);
+		m_boids.push_back(boid);
+	}
+
+
+	for (int i = 0; i < m_boids.size(); i++)
+	{
+		m_boids[i]->setBoids(m_boids);
+	}
+}
+
 BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice)
 {
 
-
-	//numPrey= _numPrey;
-	//numPredators = _numPredators;
-	//m_neighbourDistance = _neighbourDistance;
-	//m_maxForce = _maxForce;
-	//m_maxSpeed = _maxSpeed;
-	//m_seperation = _seperation;
 	m_pd3dDevice = _pd3dDevice;
 
 	m_preyData = _preyData;
 	m_predatorData = _predatorData;
 
-
+	int numPery = _numPrey;
+	int numPredators = _numPredators;
 
 	m_boids.reserve(_numPrey + _numPredators);
 
 
-	for (int i = 0; i < _numPrey+_numPredators; i++)
+	for (int i = 0; i < _numPrey; i++)
 	{
-		if (i >= 0 && i < _numPredators)
-		{
-			Boid* boid = new Boid(_predatorData, _pd3dDevice);
-			m_boids.push_back(boid);
-		}
-		else
-		{
-			Boid* boid = new Boid(_preyData, _pd3dDevice);
-			m_boids.push_back(boid);
-		}
 
-		std::cout << "made boid: " << i << std::endl;
+		Boid* boid = new Boid(_preyData, _pd3dDevice);
+		m_boids.push_back(boid);
 
+
+	}
+
+	for (int i = 0; i < _numPredators; i++)
+	{
+		Boid* boid = new Boid(_predatorData, _pd3dDevice);
+		m_boids.push_back(boid);
 	}
 
 
@@ -81,6 +117,20 @@ BoidManager::BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3
 
 BoidManager::~BoidManager()
 {
+	if (m_preyData)
+	{
+		m_preyData = nullptr;
+	}
+
+	if (m_predatorData)
+	{
+		m_predatorData = nullptr;
+	}
+
+	if (m_motherData)
+	{
+		m_motherData = nullptr;
+	}
 }
 
 void BoidManager::runBoids(GameData * _GD)

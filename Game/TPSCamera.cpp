@@ -20,6 +20,17 @@ void TPSCamera::Tick(GameData* _GD)
 	m_target = m_targetObject->GetPos();
 	m_pos = m_target + Vector3::Transform(m_dpos, rotCam) ;
 
+
+	if (_GD->m_mouseState->lZ > 0.0f)
+	{
+		m_dpos.z -= 10;
+	}
+	if (_GD->m_mouseState->lZ < 0.0f)
+	{
+		m_dpos.z += 10;
+	}
+
+
 	//and then set up proj and view matrices
 	Camera::Tick(_GD);
 }

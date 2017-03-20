@@ -10,6 +10,7 @@ struct BoidsData
 	float neighbourDistance = 20.0f;
 	float seperation = 5.0f;
 	float repulsionForce = 0.0f;
-	bool isPrey = true;
+	float attractionForce = 0.0f;
+	int type = 1;
 };
 

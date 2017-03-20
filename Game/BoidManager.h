@@ -16,6 +16,7 @@ class BoidsData;
 class BoidManager
 {
 public:
+	BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData* _preyData, BoidsData* _motherData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
 	BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
 	BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3dDevice);
 	virtual ~BoidManager();
@@ -26,23 +27,20 @@ public:
 	void drawBoids(DrawData* _DD);
 	void newPrey(ID3D11Device * _pd3dDevice);
 
-	float getNeighbourDistance() { return	*m_neighbourDistance; };
-	float getMaxSpeed() { return *m_maxSpeed; };
-	float getMaxForce() { return *m_maxForce; };
-	float getSeperation() { return *m_maxSpeed; };
-	int getNumPrey() { return *numPrey; };
+	int getNumPrey() { return numPrey; };
+	int getNumPreds() { return numPredators; }
+	int getNumMothers() { return numMothers; }
 
 private:
 
 	std::vector<Boid*> m_boids;
-	int* numPrey;
-	int* numPredators;
-	float* m_neighbourDistance;
-	float* m_maxSpeed;
-	float* m_maxForce;
-	float* m_seperation;
+	int numPrey;
+	int numPredators;
+	int numMothers;
+
 	BoidsData* m_preyData;
 	BoidsData* m_predatorData;
+	BoidsData* m_motherData;
 
 
 

@@ -24,7 +24,7 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
-	if (m_data->isPrey == true)
+	if (m_data->type == 1)
 	{
 		//top
 		m_vertices[0].Color = Color(0.0f, 0.5f, 0.0f, 1.0f);
@@ -60,7 +60,7 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 
 
 	}
-	else if(m_data->isPrey == false)
+	else if(m_data->type == 2)
 	{
 
 		//top
@@ -94,6 +94,41 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 		m_vertices[10].Pos = Vector3(0.0f, -1.0f, 1.0f) * 5;
 		m_vertices[11].Color = Color(1.0f, 0.0f, 1.0f, 1.0f);
 		m_vertices[11].Pos = Vector3(2.0f, -0.5f, 1.0f) * 5;
+	}
+	else if (m_data->type == 3)
+	{
+
+		//top
+		m_vertices[0].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[0].Pos = Vector3(0.0f, 0.0f, 0.0f) * 3;
+		m_vertices[1].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[1].Pos = Vector3(0.0f, 0.0, 2.0f) * 3;
+		m_vertices[2].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[2].Pos = Vector3(2.0f, -0.5, 1.0f) * 3;
+
+		////back
+		m_vertices[3].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[3].Pos = Vector3(0.0f, 0.0f, 0.0f) * 3;
+		m_vertices[4].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[4].Pos = Vector3(0.0f, 0.0f, 2.0f) * 3;
+		m_vertices[5].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[5].Pos = Vector3(0.0f, -1.0f, 1.0f) * 3;
+
+		////right
+		m_vertices[6].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[6].Pos = Vector3(0.0f, 0.0f, 2.0f) * 3;
+		m_vertices[7].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[7].Pos = Vector3(0.0f, -1.0f, 1.0f) * 3;
+		m_vertices[8].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[8].Pos = Vector3(2.0f, -0.5, 1.0f) * 3;
+
+		////left
+		m_vertices[9].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[9].Pos = Vector3(0.0f, 0.0, 0.0f) * 3;
+		m_vertices[10].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[10].Pos = Vector3(0.0f, -1.0f, 1.0f) * 3;
+		m_vertices[11].Color = Color(0.2f, 0.5f, 1.0f, 1.0f);
+		m_vertices[11].Pos = Vector3(2.0f, -0.5f, 1.0f) * 3;
 	}
 
 
@@ -271,23 +306,41 @@ Vector3 Boid::Repel()
 {
 	Vector3 rep = Vector3::Zero;
 
-	if (m_data->isPrey)
-	{
 
-		for (int i = 0; i < m_boids.size(); i++)
-		{
-			float d = Vector3::Distance(m_pos, m_boids[i]->GetPos());
+	for (int i = 0; i < m_boids.size(); i++)
+	{
+		float d = Vector3::Distance(m_pos, m_boids[i]->GetPos());
 			
-			if ((d > 0) && (d < m_data->neighbourDistance) && !m_boids[i]->getIsPrey())
-			{
-				rep = m_pos - m_boids[i]->GetPos();
-				rep.Normalize();
-				rep *= (m_data->repulsionForce / d);
-			}
+		if ((d > 0) && (d < m_data->neighbourDistance) && m_boids[i]->getType() == 2)
+		{
+			rep = m_pos - m_boids[i]->GetPos();
+			rep.Normalize();
+			rep *= (m_data->repulsionForce / d);
 		}
 	}
 
+
 	return rep;
+}
+
+Vector3 Boid::Attract()
+{
+	Vector3 att = Vector3::Zero;
+
+	for (int i = 0; i < m_boids.size(); i++)
+	{
+		float d = Vector3::Distance(m_pos, m_boids[i]->GetPos());
+
+		if ((d > 0) && (d < m_data->neighbourDistance) && m_boids[i]->getType() == 3)
+		{
+			att = m_pos - m_boids[i]->GetPos();
+			att.Normalize();
+			att *= -m_data->attractionForce;
+		}
+	}
+
+
+	return att;
 }
 
 Vector3 Boid::Seek(Vector3 _target)
@@ -346,17 +399,31 @@ void Boid::flock()
 	Vector3 sep = Seperation();
 	Vector3 ali = Alignment();
 	Vector3 coh = Cohesion();
-	Vector3 rep = Repel();
+	Vector3 rep = Vector3::Zero;
+	Vector3 att = Vector3::Zero;
+
+	if (m_data->type != 2)
+	{
+		rep = Repel();
+	}
+
+	if (m_data->type == 1)
+	{
+		att = Attract();
+	}
+
 
 	ali *= 1.0;
 	sep *= 1.5;
 	coh *= 1.0;
 	rep *= 1.0;
+	att *= 1.0;
 
 	applyForce(sep);
 	applyForce(ali);
 	applyForce(coh);
 	applyForce(rep);
+	applyForce(att);
 }
 
 void Boid::changeColour()
