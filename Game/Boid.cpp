@@ -413,11 +413,11 @@ void Boid::flock()
 	}
 
 
-	ali *= 1.0;
-	sep *= 1.5;
-	coh *= 1.0;
-	rep *= 1.0;
-	att *= 1.0;
+	ali *= m_data->alignmentMultiplier;
+	sep *= m_data->separationMultiplier;
+	coh *= m_data->cohesionMultiplier;
+	rep *= m_data->repulsionMultiplier;
+	att *= m_data->attractionMultiplier;
 
 	applyForce(sep);
 	applyForce(ali);

@@ -67,7 +67,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <_ProjectFileVersion>14.0.23107.0</_ProjectFileVersion>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>debug32\</OutDir>
@@ -121,6 +121,7 @@ fxc /Od /Zi /T ps_4_0_level_9_1 /E MainPS /Fh $(IntDir)TwSimpleDX11_PS.h TwSimpl
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -240,12 +241,12 @@ fxc /T ps_4_0_level_9_1 /E MainPS /Fh $(IntDir)TwSimpleDX11_PS.h TwSimpleDX11.hl
     <ClCompile Include="TwSimpleDX11.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="TwSimpleDX11.hlsl">
+    <FxCompile Include="TwSimpleDX11.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </CustomBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

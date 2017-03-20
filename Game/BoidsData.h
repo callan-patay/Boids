@@ -11,6 +11,11 @@ struct BoidsData
 	float seperation = 5.0f;
 	float repulsionForce = 0.0f;
 	float attractionForce = 0.0f;
+	float alignmentMultiplier = 1.0f;
+	float separationMultiplier = 1.5f;
+	float cohesionMultiplier = 1.0f;
+	float repulsionMultiplier = 1.0f;
+	float attractionMultiplier = 1.0f;
 	int type = 1;
 };
 

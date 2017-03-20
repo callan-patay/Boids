@@ -149,7 +149,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	TwBar *boidsBar = TwNewBar("Boids");
 	TwDefine("Global help='Change the values to alter the properties of the boids.'");
 	//TwDefine(" TweakBar color ='155 66 244' text=white");
-	int barSize[2] = { 250, 320 };
+	int barSize[2] = { 250, 550 };
 	TwSetParam(boidsBar, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 	//TwAddVarRW(boidsBar, "No. Prey", TW_TYPE_INT32, numPrey , "min=1 max=2000 step=1");
@@ -160,8 +160,14 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		TwAddVarRW(boidsBar, "Prey Seperation", TW_TYPE_FLOAT, &m_preyData->seperation, "Group='Prey' min=1 max=100 step=0.5"); 
 		TwAddVarRW(boidsBar, "Prey Max Speed", TW_TYPE_FLOAT, &m_preyData->maxSpeed, "Group='Prey' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Prey Max Force", TW_TYPE_FLOAT, &m_preyData->maxForce, "Group='Prey' min=0.1 max=10 step=0.1");
-		TwAddVarRW(boidsBar, "Prey Repulsion", TW_TYPE_FLOAT, &m_preyData->repulsionForce, "Group='Prey' min=0.1 max=100 step=0.1");
-		TwAddVarRW(boidsBar, "Prey Attraction", TW_TYPE_FLOAT, &m_preyData->attractionForce, "Group='Prey' min=0.0 max= 1.0 step=0.01");
+		TwAddVarRW(boidsBar, "Prey Repulsion Force", TW_TYPE_FLOAT, &m_preyData->repulsionForce, "Group='Prey' min=0.1 max=100 step=0.1");
+		TwAddVarRW(boidsBar, "Prey Attraction Force", TW_TYPE_FLOAT, &m_preyData->attractionForce, "Group='Prey' min=0.0 max= 1.0 step=0.01");
+
+		TwAddVarRW(boidsBar, "Prey Alignment", TW_TYPE_FLOAT, &m_preyData->alignmentMultiplier, "Group='Prey Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Prey Separation", TW_TYPE_FLOAT, &m_preyData->separationMultiplier, "Group='Prey Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Prey Cohesion", TW_TYPE_FLOAT, &m_preyData->cohesionMultiplier, "Group='Prey Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Prey Repulsion", TW_TYPE_FLOAT, &m_preyData->repulsionMultiplier, "Group='Prey Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Prey Attraction", TW_TYPE_FLOAT, &m_preyData->attractionMultiplier, "Group='Prey Multipliers' min=0.01 max= 3.0 step=0.01");
 	}
 	if (m_boidManager->getNumMothers() > 0)
 	{
@@ -169,7 +175,14 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		TwAddVarRW(boidsBar, "Mother Seperation", TW_TYPE_FLOAT, &m_motherData->seperation, "Group='Mother' min=1 max=100 step=0.5");
 		TwAddVarRW(boidsBar, "Mother Max Speed", TW_TYPE_FLOAT, &m_motherData->maxSpeed, "Group='Mother' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Mother Max Force", TW_TYPE_FLOAT, &m_motherData->maxForce, "Group='Mother' min=0.1 max=10 step=0.1");
-		TwAddVarRW(boidsBar, "Mother Repulsion", TW_TYPE_FLOAT, &m_motherData->repulsionForce, "Group='Mother' min=0.1 max=100 step=0.1");
+		TwAddVarRW(boidsBar, "Mother Repulsion Force", TW_TYPE_FLOAT, &m_motherData->repulsionForce, "Group='Mother' min=0.1 max=100 step=0.1");
+
+		TwAddVarRW(boidsBar, "Mother Alignment", TW_TYPE_FLOAT, &m_motherData->alignmentMultiplier, "Group='Mother Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Mother Separation", TW_TYPE_FLOAT, &m_motherData->separationMultiplier, "Group='Mother Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Mother Cohesion", TW_TYPE_FLOAT, &m_motherData->cohesionMultiplier, "Group='Mother Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Mother Repulsion", TW_TYPE_FLOAT, &m_motherData->repulsionMultiplier, "Group='Mother Multipliers' min=0.01 max= 3.0 step=0.01");
+
+
 	}
 	if (m_boidManager->getNumPreds() > 0)
 	{
@@ -177,6 +190,10 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		TwAddVarRW(boidsBar, "Pred Seperation", TW_TYPE_FLOAT, &m_predatorData->seperation, "Group='Predator' min=1 max=100 step=0.5");
 		TwAddVarRW(boidsBar, "Pred Max Speed", TW_TYPE_FLOAT, &m_predatorData->maxSpeed, "Group='Predator' min=0.1 max=10 step=0.1");
 		TwAddVarRW(boidsBar, "Pred Max Force", TW_TYPE_FLOAT, &m_predatorData->maxForce, "Group='Predator' min=0.1 max=10 step=0.1");
+
+		TwAddVarRW(boidsBar, "Pred Alignment", TW_TYPE_FLOAT, &m_predatorData->alignmentMultiplier, "Group='Predator Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Pred Separation", TW_TYPE_FLOAT, &m_predatorData->separationMultiplier, "Group='Predator Multipliers' min=0.01 max= 3.0 step=0.01");
+		TwAddVarRW(boidsBar, "Pred Cohesion", TW_TYPE_FLOAT, &m_predatorData->cohesionMultiplier, "Group='Predator Multipliers' min=0.01 max= 3.0 step=0.01");
 	}
 
 	//create DrawData struct and populate its pointers
@@ -233,12 +250,6 @@ Game::~Game()
 	//clear away CMO render system
 	delete m_states;
 	delete m_fxFactory;
-	delete numPrey;
-	delete numPredators;
-	delete m_neighbourDistance;
-	delete m_maxSpeed;
-	delete m_maxForce;
-	delete m_seperation;
 	delete m_DD2D;
 	TwTerminate();
 };

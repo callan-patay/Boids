@@ -72,15 +72,6 @@ protected:
 	DrawData2D * m_DD2D;	//Data to be passed by game to all 2D Game Objects via Draw 
 
 
-
-
-	int* numPrey;
-	int* numPredators;
-	float* m_neighbourDistance;
-	float* m_maxSpeed;
-	float* m_maxForce;
-	float* m_seperation;
-
 	//sound stuff
 	std::unique_ptr<AudioEngine> m_audioEngine;
 
