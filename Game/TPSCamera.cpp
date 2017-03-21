@@ -21,7 +21,7 @@ void TPSCamera::Tick(GameData* _GD)
 	m_pos = m_target + Vector3::Transform(m_dpos, rotCam) ;
 
 
-	if (_GD->m_mouseState->lZ > 0.0f)
+	if (_GD->m_mouseState->lZ > 0.0f && m_dpos.z > 30)
 	{
 		m_dpos.z -= 10;
 	}
