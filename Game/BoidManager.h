@@ -3,6 +3,7 @@
 #include <memory>
 #include <d3d11_1.h> 
 #include "Boid.h"
+#include "gameobject.h"
 
 //using namespace std;
 using namespace DirectX;
@@ -13,7 +14,7 @@ class DrawData;
 class BoidsData;
 
 
-class BoidManager
+class BoidManager : public GameObject
 {
 public:
 	BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData* _preyData, BoidsData* _motherData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
@@ -23,8 +24,8 @@ public:
 
 
 
-	void runBoids(GameData* _GD);
-	void drawBoids(DrawData* _DD);
+	virtual void Tick(GameData* _GD) override;
+	virtual void Draw(DrawData* _DD) override;
 	void newPrey(ID3D11Device * _pd3dDevice);
 
 	int getNumPrey() { return numPrey; };

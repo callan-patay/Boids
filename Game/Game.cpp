@@ -142,9 +142,9 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 
 	//m_boidManager = std::make_unique<BoidManager>(1000, 3, m_preyData, m_predatorData, _pd3dDevice);
-	m_boidManager = std::make_unique<BoidManager>(1000, 10, 3, m_preyData, m_motherData, m_predatorData, _pd3dDevice);
+	BoidManager* m_boidManager = new BoidManager(1000, 10, 3, m_preyData, m_motherData, m_predatorData, _pd3dDevice);
 	//m_boidManager = std::make_unique<BoidManager>(1000, m_preyData, _pd3dDevice);
-
+	m_GameObjects.push_back(m_boidManager);
 
 	TwBar *boidsBar = TwNewBar("Boids");
 	TwDefine("Global help='Change the values to alter the properties of the boids.'");
@@ -319,7 +319,7 @@ void Game::PlayTick()
 		}
 	}
 
-	m_boidManager->runBoids(m_GD);
+	//m_boidManager->runBoids(m_GD);
 
 	//update all objects
 	for (list<GameObject *>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
@@ -344,7 +344,7 @@ void Game::Draw(ID3D11DeviceContext* _pd3dImmediateContext)
 		m_DD->m_cam = m_TPScam;
 	}
 
-	m_boidManager->drawBoids(m_DD);
+	//m_boidManager->drawBoids(m_DD);
 
 	TwDraw();
 

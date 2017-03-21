@@ -132,7 +132,7 @@ BoidManager::~BoidManager()
 	}
 }
 
-void BoidManager::runBoids(GameData * _GD)
+void BoidManager::Tick(GameData * _GD)
 {
 	for (std::vector<Boid*>::iterator it = m_boids.begin(); it != m_boids.end(); it++)
 	{
@@ -148,7 +148,7 @@ void BoidManager::runBoids(GameData * _GD)
 
 }
 
-void BoidManager::drawBoids(DrawData * _DD)
+void BoidManager::Draw(DrawData * _DD)
 {
 	for (std::vector<Boid*>::iterator it = m_boids.begin(); it != m_boids.end(); it++)
 	{
