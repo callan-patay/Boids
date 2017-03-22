@@ -11,9 +11,43 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 {
 	m_pd3dDevice = _pd3dDevice;
 
-	m_preyData = _preyData;
-	m_predatorData = _predatorData;
-	m_motherData = _motherData;
+	if (!_preyData)
+	{
+		m_preyData = new BoidsData();
+		m_preyData->repulsionForce = 50.0f;
+		m_preyData->attractionForce = 0.60f;
+	}
+	else
+	{
+		m_preyData = _preyData;
+	}
+
+	if (!_predatorData)
+	{
+		m_predatorData = new BoidsData();
+		m_predatorData->type = 2;
+		m_predatorData->neighbourDistance = 50.0f;
+		m_predatorData->maxSpeed = 2.0f;
+		m_predatorData->maxForce = 1.0f;
+		m_predatorData->seperation = 5.0f;
+	}
+	else
+	{
+		m_predatorData = _predatorData;
+	}
+
+	if (!_motherData)
+	{
+		m_motherData = new BoidsData();
+		m_motherData->type = 3;
+		m_motherData->maxSpeed = 0.7;
+		m_motherData->repulsionForce = 50.0f;
+	}
+	else
+	{
+		m_motherData = _motherData;
+	}
+
 
 
 	 numPrey = _numPrey;
@@ -26,7 +60,7 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 	for (int i = 0; i < _numPrey; i++)
 	{
 
-		Boid* boid = new Boid(_preyData, _pd3dDevice);
+		Boid* boid = new Boid(m_preyData, _pd3dDevice);
 		m_boids.push_back(boid);
 
 
@@ -34,13 +68,13 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 
 	for (int i = 0; i < _numPredators; i++)
 	{
-		Boid* boid = new Boid(_predatorData, _pd3dDevice);
+		Boid* boid = new Boid(m_predatorData, _pd3dDevice);
 		m_boids.push_back(boid);
 	}
 
 	for (int i = 0; i < _numMothers; i++)
 	{
-		Boid* boid = new Boid(_motherData, _pd3dDevice);
+		Boid* boid = new Boid(m_motherData, _pd3dDevice);
 		m_boids.push_back(boid);
 	}
 
@@ -56,8 +90,30 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 
 	m_pd3dDevice = _pd3dDevice;
 
-	m_preyData = _preyData;
-	m_predatorData = _predatorData;
+	if (!_preyData)
+	{
+		m_preyData = new BoidsData();
+		m_preyData->repulsionForce = 50.0f;
+		m_preyData->attractionForce = 0.60f;
+	}
+	else
+	{
+		m_preyData = _preyData;
+	}
+
+	if (!_predatorData)
+	{
+		m_predatorData = new BoidsData();
+		m_predatorData->type = 2;
+		m_predatorData->neighbourDistance = 50.0f;
+		m_predatorData->maxSpeed = 2.0f;
+		m_predatorData->maxForce = 1.0f;
+		m_predatorData->seperation = 5.0f;
+	}
+	else
+	{
+		m_predatorData = _predatorData;
+	}
 
 	numPrey = _numPrey;
 	numPredators = _numPredators;
@@ -93,7 +149,17 @@ BoidManager::BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3
 	m_boids.reserve(_numPrey);
 
 	m_pd3dDevice = _pd3dDevice;
-	m_preyData = _preyData;
+
+	if (!_preyData)
+	{
+		m_preyData = new BoidsData();
+		m_preyData->repulsionForce = 50.0f;
+		m_preyData->attractionForce = 0.60f;
+	}
+	else
+	{
+		m_preyData = _preyData;
+	}
 
 	numPrey = _numPrey;
 
@@ -118,16 +184,19 @@ BoidManager::~BoidManager()
 {
 	if (m_preyData)
 	{
+		delete m_preyData;
 		m_preyData = nullptr;
 	}
 
 	if (m_predatorData)
 	{
+		delete m_predatorData;
 		m_predatorData = nullptr;
 	}
 
 	if (m_motherData)
 	{
+		delete m_motherData;
 		m_motherData = nullptr;
 	}
 }

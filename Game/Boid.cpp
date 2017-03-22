@@ -24,6 +24,7 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 		m_vertices[i].texCoord = Vector2::One;
 	}
 
+	//creates different boids of colour and size
 	if (m_data->type == 1)
 	{
 		//top
@@ -160,17 +161,17 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 	m_vertices = nullptr;
 
 
-
+	//allocates bounding box size
 	m_size = 150;
 	m_acc = Vector3::Zero;
 
-	float angle = 0.1 + (rand() % (int)(359 - 0.1 + 1));
-	m_vel = Vector3(cos(angle), cos(angle), sin(angle));
+
 
 	m_up = Vector3::Transform(Vector3::Up, m_fudge.Invert() * m_worldMat) - m_pos;
 
-
-
+	//initialises the boid in a random location with a random velocity to get them started.
+	float angle = 0.1 + (rand() % (int)(359 - 0.1 + 1));
+	m_vel = Vector3(cos(angle), cos(angle), sin(angle));
 	m_pos = Vector3((float)(rand() % m_size-5), (float)(rand() % m_size-5), (float)(rand() % m_size-5));
 }
 
@@ -182,17 +183,22 @@ void Boid::Tick(GameData * _GD)
 {
 
 	flock();
+
+	//applies generated acceleration to the velocity and clamped to prevent erratic behaviour.
 	m_vel += m_acc *_GD->m_dt;
 	m_vel = XMVector3ClampLength(m_vel, m_data->minSpeed, m_data->maxSpeed);
 	m_pos += m_vel;
 
-
+	//makes sure the boid faces in the direvction of travel.
 	Matrix scaleMat = Matrix::CreateScale(m_scale);
 	Matrix rotTransMat = Matrix::CreateWorld(m_pos, m_vel , m_up);
 	Matrix  transMat = Matrix::CreateTranslation(m_pos);
 	m_worldMat = m_fudge * scaleMat * rotTransMat * transMat;
 
+	//resets acceleration to prevent accumulation of values which may not apply anymore.
 	m_acc = Vector3::Zero;
+
+	//keeps boids within the bounding box.
 	Box();
 }
 
@@ -217,6 +223,7 @@ Vector3 Boid::Seperation()
 		float distance = Vector3::Distance(m_pos, m_boids[i]->GetPos());
 		if ((distance > 0) && (distance < m_data->seperation))
 		{
+			//calculate displacement value if a boid is found within its desired separation distance and apply it to the steer value.
 			Vector3 difference = m_pos - m_boids[i]->GetPos();
 			difference.Normalize();
 			difference /= distance;
@@ -228,12 +235,14 @@ Vector3 Boid::Seperation()
 
 	if (count > 0)
 	{
+		//makes an average displacement if encountered multiple boids within separation distance.
 		steer /= count;
 	}
 
 
 	if (steer != Vector3::Zero)
 	{
+		//makes the steer value work within the bounds of the applied force, minimising erratic behaviour.
 		steer.Normalize();
 		steer *= m_data->maxSpeed;
 		steer -= m_vel;

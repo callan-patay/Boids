@@ -142,7 +142,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 
 	//m_boidManager = std::make_unique<BoidManager>(1000, 3, m_preyData, m_predatorData, _pd3dDevice);
-	BoidManager* m_boidManager = new BoidManager(1000, 10, 3, m_preyData, m_motherData, m_predatorData, _pd3dDevice);
+	BoidManager* m_boidManager = new BoidManager(1000, 10, 3, nullptr, m_motherData, m_predatorData, _pd3dDevice);
 	//m_boidManager = std::make_unique<BoidManager>(1000, m_preyData, _pd3dDevice);
 	m_GameObjects.push_back(m_boidManager);
 
