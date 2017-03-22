@@ -10,6 +10,10 @@
 BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData * _preyData, BoidsData * _motherData, BoidsData * _predatorData, ID3D11Device * _pd3dDevice)
 {
 	m_pd3dDevice = _pd3dDevice;
+	m_pos = Vector3(0, 0, 0);
+
+
+
 
 	if (!_preyData)
 	{
@@ -60,7 +64,7 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 	for (int i = 0; i < _numPrey; i++)
 	{
 
-		Boid* boid = new Boid(m_preyData, _pd3dDevice);
+		Boid* boid = new Boid(m_pos, m_preyData, _pd3dDevice);
 		m_boids.push_back(boid);
 
 
@@ -68,13 +72,13 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 
 	for (int i = 0; i < _numPredators; i++)
 	{
-		Boid* boid = new Boid(m_predatorData, _pd3dDevice);
+		Boid* boid = new Boid(m_pos, m_predatorData, _pd3dDevice);
 		m_boids.push_back(boid);
 	}
 
 	for (int i = 0; i < _numMothers; i++)
 	{
-		Boid* boid = new Boid(m_motherData, _pd3dDevice);
+		Boid* boid = new Boid(m_pos, m_motherData, _pd3dDevice);
 		m_boids.push_back(boid);
 	}
 
@@ -89,7 +93,7 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 {
 
 	m_pd3dDevice = _pd3dDevice;
-
+	m_pos = Vector3(50, 50, 50);
 	if (!_preyData)
 	{
 		m_preyData = new BoidsData();
@@ -124,7 +128,7 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 	for (int i = 0; i < _numPrey; i++)
 	{
 
-		Boid* boid = new Boid(_preyData, _pd3dDevice);
+		Boid* boid = new Boid(m_pos, _preyData, _pd3dDevice);
 		m_boids.push_back(boid);
 
 
@@ -132,7 +136,7 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 
 	for (int i = 0; i < _numPredators; i++)
 	{
-		Boid* boid = new Boid(_predatorData, _pd3dDevice);
+		Boid* boid = new Boid(m_pos, _predatorData, _pd3dDevice);
 		m_boids.push_back(boid);
 	}
 
@@ -147,7 +151,7 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 BoidManager::BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3dDevice)
 {
 	m_boids.reserve(_numPrey);
-
+	m_pos = Vector3(50, 50, 50);
 	m_pd3dDevice = _pd3dDevice;
 
 	if (!_preyData)
@@ -166,7 +170,7 @@ BoidManager::BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3
 
 	for (int i = 0; i < _numPrey; i++)
 	{
-		Boid* boid = new Boid(_preyData, _pd3dDevice);
+		Boid* boid = new Boid(m_pos, _preyData, _pd3dDevice);
 		m_boids.push_back(boid);
 
 		std::cout << "made boid: " << i << std::endl;
@@ -229,8 +233,8 @@ void BoidManager::Draw(DrawData * _DD)
 
 void BoidManager::newPrey(ID3D11Device * _pd3dDevice)
 {
-	Boid* new_boid = new Boid(m_preyData, _pd3dDevice);
-	//numBoids++;
-	m_boids.push_back(new_boid);
+	//Boid* new_boid = new Boid(m_preyData, _pd3dDevice);
+	////numBoids++;
+	//m_boids.push_back(new_boid);
 }
 

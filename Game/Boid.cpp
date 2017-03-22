@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
+Boid::Boid(Vector3 _pos, BoidsData* _data, ID3D11Device * _pd3dDevice)
 {
 
 	m_fudge = Matrix::CreateRotationY(XM_PIDIV2);
@@ -12,13 +12,13 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 
 	GD = _pd3dDevice;
 	m_data = _data;
-
+	m_parentPos = _pos;
 	numVerts = 12;
 	m_numPrims = numVerts / 3;
 	m_vertices = new myVertex[numVerts];
 	indices = new WORD[numVerts];
 
-	for (int i = 0; i<numVerts; i++)
+	for (int i = 0; i < numVerts; i++)
 	{
 		indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
@@ -61,7 +61,7 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 
 
 	}
-	else if(m_data->type == 2)
+	else if (m_data->type == 2)
 	{
 
 		//top
@@ -162,43 +162,43 @@ Boid::Boid(BoidsData* _data, ID3D11Device * _pd3dDevice)
 
 
 	//allocates bounding box size
-	m_size = 150;
+
+
+	m_size =  150;
 	m_acc = Vector3::Zero;
-
-
 
 	m_up = Vector3::Transform(Vector3::Up, m_fudge.Invert() * m_worldMat) - m_pos;
 
 	//initialises the boid in a random location with a random velocity to get them started.
 	float angle = 0.1 + (rand() % (int)(359 - 0.1 + 1));
-	m_vel = Vector3(cos(angle), cos(angle), sin(angle));
-	m_pos = Vector3((float)(rand() % m_size-5), (float)(rand() % m_size-5), (float)(rand() % m_size-5));
-}
 
+	//m_pos = Vector3((float)(rand() % m_size-5), (float)(rand() % m_size-5), (float)(rand() % m_size-5));
+
+
+	m_pos = Vector3((float)(rand() % m_size - 5), (float)(rand() % m_size- 5), (float)(rand() % m_size - 5));
+	m_vel = Vector3(cos(angle), cos(angle), sin(angle));
+
+
+}
 Boid::~Boid()
 {
 }
 
 void Boid::Tick(GameData * _GD)
 {
-
 	flock();
 
-	//applies generated acceleration to the velocity and clamped to prevent erratic behaviour.
 	m_vel += m_acc *_GD->m_dt;
 	m_vel = XMVector3ClampLength(m_vel, m_data->minSpeed, m_data->maxSpeed);
 	m_pos += m_vel;
 
-	//makes sure the boid faces in the direvction of travel.
 	Matrix scaleMat = Matrix::CreateScale(m_scale);
 	Matrix rotTransMat = Matrix::CreateWorld(m_pos, m_vel , m_up);
 	Matrix  transMat = Matrix::CreateTranslation(m_pos);
 	m_worldMat = m_fudge * scaleMat * rotTransMat * transMat;
 
-	//resets acceleration to prevent accumulation of values which may not apply anymore.
 	m_acc = Vector3::Zero;
 
-	//keeps boids within the bounding box.
 	Box();
 }
 
@@ -223,7 +223,6 @@ Vector3 Boid::Seperation()
 		float distance = Vector3::Distance(m_pos, m_boids[i]->GetPos());
 		if ((distance > 0) && (distance < m_data->seperation))
 		{
-			//calculate displacement value if a boid is found within its desired separation distance and apply it to the steer value.
 			Vector3 difference = m_pos - m_boids[i]->GetPos();
 			difference.Normalize();
 			difference /= distance;
@@ -232,17 +231,14 @@ Vector3 Boid::Seperation()
 		}
 
 	}
-
 	if (count > 0)
 	{
-		//makes an average displacement if encountered multiple boids within separation distance.
 		steer /= count;
 	}
 
 
 	if (steer != Vector3::Zero)
 	{
-		//makes the steer value work within the bounds of the applied force, minimising erratic behaviour.
 		steer.Normalize();
 		steer *= m_data->maxSpeed;
 		steer -= m_vel;
@@ -269,7 +265,6 @@ Vector3 Boid::Alignment()
 		}
 	}
 
-
 	if (count > 0)
 	{
 		sum /= (float)count;
@@ -277,7 +272,7 @@ Vector3 Boid::Alignment()
 		sum *= m_data->maxSpeed;
 
 		Vector3 steer = sum - m_vel;
-		steer = XMVector3ClampLength(steer, 0.0f, m_data->maxForce);
+		steer = XMVector3ClampLength(steer, m_data->minForce, m_data->maxForce);
 		return steer;
 	}
 	else
@@ -315,7 +310,6 @@ Vector3 Boid::Repel()
 {
 	Vector3 rep = Vector3::Zero;
 
-
 	for (int i = 0; i < m_boids.size(); i++)
 	{
 		float d = Vector3::Distance(m_pos, m_boids[i]->GetPos());
@@ -327,7 +321,6 @@ Vector3 Boid::Repel()
 			rep *= (m_data->repulsionForce / d);
 		}
 	}
-
 
 	return rep;
 }
@@ -347,7 +340,6 @@ Vector3 Boid::Attract()
 			att *= -m_data->attractionForce;
 		}
 	}
-
 
 	return att;
 }
@@ -370,29 +362,29 @@ Vector3 Boid::Seek(Vector3 _target)
 
 void Boid::Box()
 {
-	if (m_pos.x < 0)
+	if (m_pos.x < m_parentPos.x)
 	{
 		m_pos.x += m_size;
 	}
-	else if (m_pos.x > m_size)
+	else if (m_pos.x > m_parentPos.x + 150)
 	{
 		m_pos.x -= m_size;
 	}
 
-	if (m_pos.y < 0)
+	if (m_pos.y < m_parentPos.y)
 	{
 		m_pos.y += m_size;
 	}
-	else if (m_pos.y > m_size)
+	else if (m_pos.y > m_parentPos.y + 150)
 	{
 		m_pos.y -= m_size;
 	}
 
-	if (m_pos.z < 0)
+	if (m_pos.z < m_parentPos.z)
 	{
 		m_pos.z += m_size;
 	}
-	else if (m_pos.z > m_size)
+	else if (m_pos.z > m_parentPos.y + 150)
 	{
 		m_pos.z -= m_size;
 	}

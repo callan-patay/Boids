@@ -107,10 +107,8 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	m_GameObjects.push_back(m_cameraControl);
 
 
-
 	//add a secondary camera
-	m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, m_cameraControl, Vector3::UnitY, Vector3(0.0f, 0.0f, 500.0f));
-	m_GameObjects.push_back(m_TPScam);
+	
 
 
 
@@ -134,15 +132,16 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	
 
-
 	m_cam = new Camera(0.25f * XM_PI, AR, 1.0f, 10000.0f, Vector3::UnitY, Vector3(75.0f, 75.0f, -75.0));
 	m_cam->SetPos(Vector3(0.0f, 0.0f, -250.0f));
 	m_GameObjects.push_back(m_cam);
 
+	m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, m_cameraControl, Vector3::UnitY, Vector3(0.0f, 0.0f, 500.0f));
+	m_GameObjects.push_back(m_TPScam);
 
 
 	//m_boidManager = std::make_unique<BoidManager>(1000, 3, m_preyData, m_predatorData, _pd3dDevice);
-	BoidManager* m_boidManager = new BoidManager(1000, 10, 3, nullptr, m_motherData, m_predatorData, _pd3dDevice);
+	BoidManager* m_boidManager = new BoidManager(1000, 10, 3, m_preyData, m_motherData, m_predatorData, _pd3dDevice);
 	//m_boidManager = std::make_unique<BoidManager>(1000, m_preyData, _pd3dDevice);
 	m_GameObjects.push_back(m_boidManager);
 
@@ -307,17 +306,17 @@ bool Game::Tick()
 void Game::PlayTick()
 {
 	//upon space bar switch camera state
-	if ((m_keyboardState[DIK_SPACE] & 0x80) && !(m_prevKeyboardState[DIK_SPACE] & 0x80))
-	{
-		if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
-		{
-			m_GD->m_GS = GS_PLAY_TPS_CAM;
-		}
-		else
-		{
-			m_GD->m_GS = GS_PLAY_MAIN_CAM;
-		}
-	}
+	//if ((m_keyboardState[DIK_SPACE] & 0x80) && !(m_prevKeyboardState[DIK_SPACE] & 0x80))
+	//{
+	//	if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
+	//	{
+	//		m_GD->m_GS = GS_PLAY_TPS_CAM;
+	//	}
+	//	else
+	//	{
+	//		m_GD->m_GS = GS_PLAY_MAIN_CAM;
+	//	}
+	//}
 
 	//m_boidManager->runBoids(m_GD);
 

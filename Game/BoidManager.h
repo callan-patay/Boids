@@ -17,7 +17,8 @@ class BoidsData;
 class BoidManager : public GameObject
 {
 public:
-	BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData* _preyData, BoidsData* _motherData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
+	BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData* _preyData,
+	BoidsData* _motherData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
 	BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
 	BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3dDevice);
 	virtual ~BoidManager();

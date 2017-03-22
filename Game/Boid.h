@@ -11,10 +11,8 @@
 class Boid : public VBGO
 {
 public:
-	Boid(BoidsData* _data, ID3D11Device* _pd3dDevice);
+	Boid(Vector3 _pos, BoidsData* _data, ID3D11Device* _pd3dDevice);
 	virtual ~Boid();
-
-
 
 	virtual void Tick(GameData* _GD);
 	virtual void Draw(DrawData* _DD) override;
@@ -45,6 +43,7 @@ private:
 	WORD* indices;
 	ID3D11Device * GD;
 	int m_size;
+	Vector3 m_parentPos;
 	Vector3 m_up;
 
 	BoidsData* m_data;
