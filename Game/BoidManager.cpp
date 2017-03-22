@@ -7,10 +7,10 @@
 #include <iostream>
 
 
-BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, BoidsData * _preyData, BoidsData * _motherData, BoidsData * _predatorData, ID3D11Device * _pd3dDevice)
+BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numMothers, int _numPredators, BoidsData * _preyData, BoidsData * _motherData, BoidsData * _predatorData, ID3D11Device * _pd3dDevice)
 {
 	m_pd3dDevice = _pd3dDevice;
-	m_pos = Vector3(0, 0, 0);
+	m_pos = _pos;
 
 
 
@@ -89,11 +89,11 @@ BoidManager::BoidManager(int _numPrey, int _numMothers, int _numPredators, Boids
 	}
 }
 
-BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice)
+BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice)
 {
 
 	m_pd3dDevice = _pd3dDevice;
-	m_pos = Vector3(50, 50, 50);
+	m_pos = _pos;
 	if (!_preyData)
 	{
 		m_preyData = new BoidsData();
@@ -148,10 +148,10 @@ BoidManager::BoidManager(int _numPrey, int _numPredators, BoidsData* _preyData, 
 
 }
 
-BoidManager::BoidManager(int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3dDevice)
+BoidManager::BoidManager(Vector3 _pos, int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3dDevice)
 {
 	m_boids.reserve(_numPrey);
-	m_pos = Vector3(50, 50, 50);
+	m_pos = _pos;
 	m_pd3dDevice = _pd3dDevice;
 
 	if (!_preyData)
@@ -203,6 +203,15 @@ BoidManager::~BoidManager()
 		delete m_motherData;
 		m_motherData = nullptr;
 	}
+
+	for (int i = 0; i < m_boids.size(); i++)
+	{
+		delete m_boids[i];
+
+		m_boids[i] = nullptr;
+	}
+
+
 }
 
 void BoidManager::Tick(GameData * _GD)
@@ -211,14 +220,6 @@ void BoidManager::Tick(GameData * _GD)
 	{
 		(*it)->Tick(_GD);
 	}
-
-
-	//if (*numBoids > m_boids.size())
-	//{
-	//	newBoid(m_pd3dDevice);
-	//}
-
-
 }
 
 void BoidManager::Draw(DrawData * _DD)
@@ -228,13 +229,3 @@ void BoidManager::Draw(DrawData * _DD)
 		(*it)->Draw(_DD);
 	}
 }
-
-
-
-void BoidManager::newPrey(ID3D11Device * _pd3dDevice)
-{
-	//Boid* new_boid = new Boid(m_preyData, _pd3dDevice);
-	////numBoids++;
-	//m_boids.push_back(new_boid);
-}
-

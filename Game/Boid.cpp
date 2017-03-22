@@ -167,21 +167,31 @@ Boid::Boid(Vector3 _pos, BoidsData* _data, ID3D11Device * _pd3dDevice)
 	m_size =  150;
 	m_acc = Vector3::Zero;
 
+	int sizeX = _pos.x + m_size;
+	int sizeY = _pos.y + m_size;
+	int sizeZ = _pos.z + m_size;
+
+
+
+
 	m_up = Vector3::Transform(Vector3::Up, m_fudge.Invert() * m_worldMat) - m_pos;
 
 	//initialises the boid in a random location with a random velocity to get them started.
 	float angle = 0.1 + (rand() % (int)(359 - 0.1 + 1));
-
-	//m_pos = Vector3((float)(rand() % m_size-5), (float)(rand() % m_size-5), (float)(rand() % m_size-5));
-
-
-	m_pos = Vector3((float)(rand() % m_size - 5), (float)(rand() % m_size- 5), (float)(rand() % m_size - 5));
+	m_pos = Vector3((float)(rand() % sizeX - _pos.x) + _pos.x, (float)(rand() % sizeX - _pos.y) + _pos.y, (float)(rand() % sizeX - _pos.z) + _pos.z);
 	m_vel = Vector3(cos(angle), cos(angle), sin(angle));
 
 
 }
 Boid::~Boid()
 {
+	for (int i = 0; i < m_boids.size(); i++)
+	{
+		m_boids[i] = nullptr;
+	}
+
+
+	m_data = nullptr;
 }
 
 void Boid::Tick(GameData * _GD)
