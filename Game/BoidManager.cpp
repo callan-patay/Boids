@@ -9,12 +9,9 @@
 
 BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numMothers, int _numPredators, BoidsData * _preyData, BoidsData * _motherData, BoidsData * _predatorData, ID3D11Device * _pd3dDevice)
 {
-	m_pd3dDevice = _pd3dDevice;
 	m_pos = _pos;
 
-
-
-
+	//if null ptr's for the data objects are passed, create standard data objects
 	if (!_preyData)
 	{
 		m_preyData = new BoidsData();
@@ -60,13 +57,13 @@ BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numMothers, int _numPr
 
 	m_boids.reserve(_numPrey + _numPredators + _numMothers);
 
+	//creates the  different kinds of boids based on parameters passed
 
 	for (int i = 0; i < _numPrey; i++)
 	{
 
 		Boid* boid = new Boid(m_pos, m_preyData, _pd3dDevice);
 		m_boids.push_back(boid);
-
 
 	}
 
@@ -82,6 +79,7 @@ BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numMothers, int _numPr
 		m_boids.push_back(boid);
 	}
 
+	//gives boids access to every other boid
 
 	for (int i = 0; i < m_boids.size(); i++)
 	{
@@ -91,8 +89,7 @@ BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numMothers, int _numPr
 
 BoidManager::BoidManager(Vector3 _pos, int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice)
 {
-
-	m_pd3dDevice = _pd3dDevice;
+	//does the same as the first constructor
 	m_pos = _pos;
 	if (!_preyData)
 	{
@@ -152,8 +149,7 @@ BoidManager::BoidManager(Vector3 _pos, int _numPrey, BoidsData* _preyData, ID3D1
 {
 	m_boids.reserve(_numPrey);
 	m_pos = _pos;
-	m_pd3dDevice = _pd3dDevice;
-
+	//does the same as the previous constructor
 	if (!_preyData)
 	{
 		m_preyData = new BoidsData();
@@ -216,6 +212,7 @@ BoidManager::~BoidManager()
 
 void BoidManager::Tick(GameData * _GD)
 {
+	//runs the boids logic
 	for (std::vector<Boid*>::iterator it = m_boids.begin(); it != m_boids.end(); it++)
 	{
 		(*it)->Tick(_GD);
@@ -224,6 +221,7 @@ void BoidManager::Tick(GameData * _GD)
 
 void BoidManager::Draw(DrawData * _DD)
 {
+	//draws the boids
 	for (std::vector<Boid*>::iterator it = m_boids.begin(); it != m_boids.end(); it++)
 	{
 		(*it)->Draw(_DD);

@@ -93,10 +93,6 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	m_light = new Light(Vector3(.0f, 100.0f, 160.0f), Color(1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f));
 	m_GameObjects.push_back(m_light);
 
-	//add Player
-	//Player* pPlayer = new Player("BirdModelV1.cmo", _pd3dDevice, m_fxFactory);
-	//pPlayer->SetPos(Vector3(0.0f, 0.0f, 0.0f));
-	//m_GameObjects.push_back(pPlayer);
 
 
 	TwInit(TW_DIRECT3D11, _pd3dDevice);
@@ -112,12 +108,14 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 
 
-
+	//creation of boids data objects for each type.
 	BoidsData* m_preyData = new BoidsData();
+	//prey have both repulsion and attraction
 	m_preyData->repulsionForce = 50.0f;
 	m_preyData->attractionForce = 0.60f;
 	
 	BoidsData* m_predatorData = new BoidsData();
+	//predators have no repulsion and attraction, but higher speed and force and search radius
 	m_predatorData->type = 2;
 	m_predatorData->neighbourDistance = 50.0f;
 	m_predatorData->maxSpeed = 2.0f;
@@ -126,6 +124,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 
 	BoidsData* m_motherData = new BoidsData();
+	//mothers have repulsion from predators, and slightly higher speed than the prey to put them in front.
 	m_motherData->type = 3;
 	m_motherData->maxSpeed = 0.7;
 	m_motherData->repulsionForce = 50.0f;
@@ -140,6 +139,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	m_GameObjects.push_back(m_TPScam);
 
 
+	//different boid manager constructors, can be passed into the main game objects list to become part of the engine.
 	//m_boidManager = std::make_unique<BoidManager>(1000, 3, m_preyData, m_predatorData, _pd3dDevice);
 	BoidManager* m_boidManager = new BoidManager(Vector3::Zero, 1000, 10, 3, m_preyData, m_motherData, m_predatorData, _pd3dDevice);
 	//m_boidManager = std::make_unique<BoidManager>(1000, m_preyData, _pd3dDevice);
@@ -147,12 +147,11 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	TwBar *boidsBar = TwNewBar("Boids");
 	TwDefine("Global help='Change the values to alter the properties of the boids.'");
-	//TwDefine(" TweakBar color ='155 66 244' text=white");
+
 	int barSize[2] = { 250, 550 };
 	TwSetParam(boidsBar, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
-	//TwAddVarRW(boidsBar, "No. Prey", TW_TYPE_INT32, numPrey , "min=1 max=2000 step=1");
-	//TwAddVarRW(boidsBar, "No. Preds", TW_TYPE_INT32, numPredators, "min=1 max=3 step=1");
+
 	if (m_boidManager->getNumPrey() > 0)
 	{
 		TwAddVarRW(boidsBar, "Prey Neighbour Dist", TW_TYPE_FLOAT, &m_preyData->neighbourDistance, "Group='Prey' min=1 max=100 step=0.5");	

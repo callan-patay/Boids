@@ -26,13 +26,9 @@ public:
 	void Box();
 	void applyForce(Vector3 _force);
 	void flock();
-	void changeColour();
 
 
-	float getNeighbourDistance() { return m_data->neighbourDistance; };
-	float getMaxSpeed() { return m_data->maxSpeed; };
-	float getMaxForce() { return m_data->maxForce; };
-	float getSeperation() { return m_data->seperation; };
+
 	int getType() { return m_data->type; }
 
 
@@ -41,7 +37,6 @@ private:
 	int numVerts;
 	myVertex* m_vertices;
 	WORD* indices;
-	ID3D11Device * GD;
 	int m_size;
 	Vector3 m_parentPos;
 	Vector3 m_up;

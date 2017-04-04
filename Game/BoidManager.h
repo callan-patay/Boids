@@ -17,10 +17,14 @@ class BoidsData;
 class BoidManager : public GameObject
 {
 public:
+	//creates prey, predators and mothers
 	BoidManager(Vector3 _pos, int _numPrey, int _numMothers, int _numPredators, BoidsData* _preyData,
 	BoidsData* _motherData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
+	//creates prey and predators
 	BoidManager(Vector3 _pos, int _numPrey, int _numPredators, BoidsData* _preyData, BoidsData* _predatorData, ID3D11Device * _pd3dDevice);
+	//created prey
 	BoidManager(Vector3 _pos, int _numPrey, BoidsData* _preyData, ID3D11Device * _pd3dDevice);
+
 	virtual ~BoidManager();
 
 
@@ -43,8 +47,5 @@ private:
 	BoidsData* m_predatorData;
 	BoidsData* m_motherData;
 
-
-
-	ID3D11Device* m_pd3dDevice;
 
 };
